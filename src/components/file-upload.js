@@ -1,13 +1,14 @@
 import Button from '@mui/material/Button';
 import { UploadFileOutlined } from '@mui/icons-material';
 import { Box, Container } from '@mui/material';
-import { useEffect, useRef } from 'react';
-import BasicAlerts from './alert';
+import { useEffect, useRef, useState } from 'react';
+import BasicAlert from './basic-alert';
 
 export default function FileUpload({ setData, setLoading }) {
 
     let inputRef = useRef();
     let worker = null;
+    const [open, setOpen] = useState(false);
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
     worker = new Worker(new URL("./upload-file.js", import.meta.url));
@@ -15,10 +16,15 @@ export default function FileUpload({ setData, setLoading }) {
     worker.onmessage = function (event) {
         if (event.data.data) {
             setLoading(false);
-            setData(event.data);
-            console.log(event.data)
+            setData(event.data.data);
+            console.log(event.data.data);
         } else {
             setLoading(false);
+            setOpen(true);
+            let intervalId = setTimeout(() => {
+                setOpen(false);
+                clearTimeout(intervalId);
+            }, 5000);
         }
     }
 
@@ -46,7 +52,7 @@ export default function FileUpload({ setData, setLoading }) {
                 <Button variant="outlined" sx={{ borderRadius: '50px' }}>Upload File</Button>
                 <input type="file" ref={inputRef} className='hidden' accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" onChange={fetchFileData} />
             </Box>
-            <BasicAlerts />
+            <BasicAlert open={open} />
         </Container>
     )
 }

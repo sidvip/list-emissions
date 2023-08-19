@@ -31,7 +31,7 @@ export default function App() {
         <Grid item>
           <Box sx={{ height: '70vh' }}>
             {isLoading ? <LinearDeterminate /> : null}
-            {data === null ? <h1 className='text-center text-3xl text-blue-300 italic'>Your loaded data will be displayed here</h1> : <EmissionsTable rows={createRows()} />}
+            {data === null ? <div className='text-center text-3xl text-blue-300 italic flex items-center justify-center h-[70%]'>Your loaded data will be displayed here</div> : <EmissionsTable rows={createRows()} />}
           </Box>
         </Grid>
       </Grid>
