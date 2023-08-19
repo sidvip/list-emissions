@@ -10,3 +10,5 @@
 4. Material UI Icons
 
 # Usage
+
+>> npm i && npm start
