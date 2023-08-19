@@ -1,25 +1,41 @@
-import logo from './logo.svg';
-import './App.css';
+import * as React from 'react';
+import Box from '@mui/material/Box';
+import Grid from '@mui/material/Grid';
+import FileUpload from './components/file-upload';
+import EmissionsTable from './components/emissions-table';
+import LinearDeterminate from './components/progress';
 
-function App() {
+export default function App() {
+  const [data, setData] = React.useState(null);
+  const [isLoading, setLoading] = React.useState(false);
+
+  function createRows() {
+    return data.slice(1,).map((ele, id) => ({
+      id: id + 1,
+      company_name: ele[6],
+      type_of_purchase: ele[5],
+      quantity: ele[3],
+      date_of_purchase: ele[1],
+      emission_factor: ele[7],
+    }))
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Box sx={{ flexGrow: 1, maxHeight: '600px' }}>
+      <Grid container direction="column" gap={2}>
+        <Grid item>
+          <Box sx={{ height: '25vh' }} className='p-2'>
+            <FileUpload setData={setData} setLoading={setLoading} />
+          </Box>
+        </Grid>
+        <Grid item>
+          <Box sx={{ height: '70vh' }}>
+            {isLoading ? <LinearDeterminate /> : null}
+            {data === null ? <h1 className='text-center text-3xl text-blue-300 italic'>Your loaded data will be displayed here</h1> : <EmissionsTable rows={createRows()} />}
+          </Box>
+        </Grid>
+      </Grid>
+    </Box>
   );
 }
 
-export default App;
